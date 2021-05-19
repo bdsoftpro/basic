@@ -1,0 +1,77 @@
+package cef
+
+{{- if or .NeedsUnsafeImport (eq .GoName "Settings")}}
+import (
+{{- if eq .GoName "Settings"}}
+	"path/filepath"
+{{- end}}
+{{- if .NeedsUnsafeImport}}
+	"unsafe"
+{{- end}}
+{{- if eq .GoName "Settings"}}
+
+	"lib/toolbox/xio/fs/paths"
+{{- end}}
+)
+{{- end}}
+
+import (
+	// #include "capi_gen.h"
+	"C"
+)
+
+// {{.GoName}} ({{.Name}} from {{.Position.Src}})
+{{- $comment := .Position.Comment}}{{if $comment}}
+{{$comment}}
+{{- end}}
+type {{.GoName}} struct {
+{{- range .Fields}}
+	// {{.Var.GoName}} ({{.Var.Name}})
+{{- $comment := .Position.Comment}}{{if $comment}}
+	{{$comment}}
+{{- end}}
+	{{.Var.GoName}} {{.Var.GoType}}
+{{- end}}
+}
+
+// New{{.GoName}} creates a new {{.GoName}}.
+func New{{.GoName}}() *{{.GoName}} {
+	return &{{.GoName}}{
+{{- if .NeedsSizeSet}}
+		Size: C.sizeof_struct__{{.Name}},
+{{- end}}
+{{- if eq .GoName "Settings"}}
+		NoSandbox: 1,
+		CommandLineArgsDisabled: 1,
+		LogSeverity: LogseverityWarning,
+		CachePath: filepath.Join(paths.AppDataDir(), "cache"),
+		UserDataPath: filepath.Join(paths.AppDataDir(), "data"),
+		LogFile: filepath.Join(paths.AppLogDir(), "cef.log"),
+{{- end}}
+	}
+}
+
+func (d *{{.GoName}}) toNative(native *C.{{.Name}}) *C.{{.Name}} {
+	if d == nil {
+		return nil
+	}
+{{- range .Fields}}
+	{{.ToNative}}
+{{- end}}
+	return native
+}
+
+func (n *C.{{.Name}}) toGo() *{{.GoName}} {
+	if n == nil {
+		return nil
+	}
+	var d {{.GoName}}
+	n.intoGo(&d)
+	return &d
+}
+
+func (n *C.{{.Name}}) intoGo(d *{{.GoName}}) {
+{{- range .Fields}}
+	{{.IntoGo}}
+{{- end}}
+}

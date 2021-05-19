@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Product Details</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="/lib/images/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+	<link rel="stylesheet" href="lib/css/font-awesome.min.css">
+	<style type="text/css">
+		th, td {
+		  border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+	<table style="width:100%">
+		<caption>Product Details:</caption>
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Price</th>
+			<th>Quantity</th>
+			<th>Status</th>
+		</tr>
+		<tr>
+			<td>{{.Id}}</td>
+			<td>{{.Name}}</td>
+			<td>{{.Price}}</td>
+			<td>{{.Quantity}}</td>
+			<td>{{.Status}}</td>
+		</tr>
+	</table>
+</body>
+</html>

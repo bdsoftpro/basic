@@ -1,0 +1,18 @@
+package cef
+
+import "unsafe"
+
+import (
+{{- range .Headers}}
+	// #include "{{.}}"
+{{- end}}
+	"C"
+)
+{{- range .Types}}
+
+// {{.GoName}} ({{.Name}} from {{.Position.Src}})
+{{- $comment := .Position.Comment}}{{if $comment}}
+{{$comment}}
+{{- end}}
+type {{.GoName}} {{.RefersTo}}
+{{- end}}

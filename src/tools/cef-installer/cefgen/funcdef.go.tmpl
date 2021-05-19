@@ -1,0 +1,18 @@
+package cef
+
+import "unsafe"
+
+import (
+	// #include "capi_gen.h"
+	"C"
+)
+{{- range .}}
+
+// {{.GoName}} ({{.Name}} from {{.Position.Src}})
+{{- $comment := .Position.Comment}}{{if $comment}}
+{{$comment}}
+{{- end}}
+func {{.GoName}}({{.ParameterList}}) {{.Return.GoType}} {
+	{{.Body}}
+}
+{{- end}}
